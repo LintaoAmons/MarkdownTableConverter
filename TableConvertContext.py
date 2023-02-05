@@ -1,18 +1,21 @@
 import enum
-from abc import ABC, abstractmethod
+from abc import ABC
+
+from MarkdownUtil import MarkdownTableUtil
 
 
 class Type(enum.Enum):
     CSV = 1
 
 
-class TableConverter(ABC):
-    @abstractmethod
-    def toMdTable(self) -> str:
-        pass
+class DataModel:
+    def __init__(self, header: list[str], data: list[list[str]]):
+        self.header = header
+        self.data = data
 
-    @abstractmethod
-    def fromMdTable(self) -> str:
+
+class TableDataParser(ABC):
+    def parseData(self, rawData: str) -> DataModel:
         pass
 
     def type(self) -> Type:
@@ -20,13 +23,11 @@ class TableConverter(ABC):
 
 
 class TableConvertContext:
-    def __init__(self, converters: list[TableConverter]):
+    def __init__(self, converters: list[TableDataParser]):
         self.types = {}
         for converter in converters:
             self.types[converter.type()] = converter
 
-    def toMdTable(self, type_: Type):
-        return self.types[type_].toMdTable()
-
-    def fromMdTable(self, type_: Type):
-        return self.types[type_].fromMdTable()
+    def toMdTable(self, rawData: str, type_: Type) -> str:
+        dataModel = self.types[type_].parseData(rawData)
+        return MarkdownTableUtil.generate(dataModel.header, dataModel.data)

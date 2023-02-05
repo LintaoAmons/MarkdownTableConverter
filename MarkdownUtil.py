@@ -1,7 +1,7 @@
 class MarkdownTableUtil:
 
     @staticmethod
-    def _generateHeader(header: list[str]):
+    def _generateHeader(header: list[str]) -> str:
         if len(header) == 0:
             raise Exception("header is empty")
         if len(header) == 1:
@@ -18,7 +18,7 @@ class MarkdownTableUtil:
         return f"{headerString}\n{splitString}"
 
     @staticmethod
-    def _generateOneRow(columnLength: int, data: list[str]):
+    def _generateOneRow(columnLength: int, data: list[str]) -> str:
         if columnLength == 1:
             one = "" if data[0] is None else data[0]
             return f"| {one} |"
@@ -39,7 +39,7 @@ class MarkdownTableUtil:
         return "".join(columns)
 
     @staticmethod
-    def _generateData(size: int, data: list[list[str]]):
+    def _generateData(size: int, data: list[list[str]]) -> str:
         return "\n".join([MarkdownTableUtil._generateOneRow(size, oneRow) for oneRow in data])
 
     @staticmethod
@@ -47,15 +47,6 @@ class MarkdownTableUtil:
         headerString = MarkdownTableUtil._generateHeader(header)
         dataString = MarkdownTableUtil._generateData(len(header), data)
         return f"{headerString}\n{dataString}"
-
-    @staticmethod
-    def fromCSVtoTable(csv_file_path: str) -> str:
-        pass
-        # with open(csv_file_path, 'r') as f:
-        #     rows = f.read().split("\n")
-        #     data = [row.split(',') for row in rows]
-        #
-        # MarkdownTableUtil.generate()
 
 
 if __name__ == '__main__':
